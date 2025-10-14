@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { UploadSensor } from "@/components/app/UploadSensor";
 import { KPICards, type UnifiedRecord } from "@/components/app/KPICards";
 import { MapView } from "@/components/app/MapView";
@@ -21,13 +21,10 @@ export default function Index() {
   const [coords, setCoords] = useState<{ lat: string; lon: string }>({ lat: "4.711", lon: "-74.0721" });
   const [preview, setPreview] = useState<SourcePreview>({ sensor: [], openaq: [], tempo: [] });
   const [data, setData] = useState<UnifiedRecord[]>([]);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [radiusKm, setRadiusKm] = useState<string>("50");
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
-
-  const hasAlerts = useMemo(() => data.some(d => d.alert_flag), [data]);
 
   const fetchOpenAQ = async () => {
     try {
@@ -74,7 +71,6 @@ export default function Index() {
   };
 
   const mergeAll = async () => {
-    setLoading(true);
     setError(null);
     try {
       const res = await fetch(`/api/merge`, {
@@ -87,8 +83,6 @@ export default function Index() {
       setData(js);
     } catch (e: any) {
       setError(e.message || String(e));
-    } finally {
-      setLoading(false);
     }
   };
 
