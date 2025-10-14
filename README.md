@@ -101,6 +101,3 @@ La aplicación incluye una página detallada de **Términos y Variables** (`/ter
 - **Gestión Ambiental**: Toma de decisiones basada en datos científicos
 - **Educación**: Herramienta de visualización para programas ambientales
 
-## 🔬 Instituto Tecnológico Metropolitano (ITM)
-
-Desarrollado como parte de proyectos de investigación en calidad del aire y salud ambiental del ITM, contribuyendo al conocimiento científico y la gestión ambiental urbana en Colombia.
