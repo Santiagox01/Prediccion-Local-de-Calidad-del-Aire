@@ -2,7 +2,7 @@
 
 ## 🌍 Descripción
 
-AirFusion TEMPO es una aplicación web desarrollada por el Instituto Tecnológico Metropolitano (ITM) para el monitoreo, análisis y predicción local de la calidad del aire. La plataforma integra múltiples fuentes de datos para proporcionar una visión comprehensiva de los contaminantes atmosféricos y su impacto en la salud pública.
+AirFusion TEMPO es una aplicación web desarrollada por estudiantes de Ingenieria en ciencia de datos del Instituto Tecnológico Metropolitano (ITM) para el monitoreo, análisis y predicción local de la calidad del aire. La plataforma integra múltiples fuentes de datos para proporcionar una visión comprehensiva de los contaminantes atmosféricos y su impacto en la salud pública.
 
 ## ✨ Características Principales
 
