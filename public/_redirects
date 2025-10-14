@@ -1,0 +1,14 @@
+/api/openaq /.netlify/functions/openaq 200
+/api/tempo /.netlify/functions/tempo 200
+/api/openaq_store /.netlify/functions/openaq_store 200
+/api/tempo_store /.netlify/functions/tempo_store 200
+/api/merge /.netlify/functions/merge 200
+/api/upload_sensor /.netlify/functions/upload_sensor 200
+/api/upload_openaq /.netlify/functions/upload_openaq 200
+/api/upload_tempo /.netlify/functions/upload_tempo 200
+/api/export_csv /.netlify/functions/export_csv 200
+/api/export_openaq /.netlify/functions/export_openaq 200
+/api/export_tempo /.netlify/functions/export_tempo 200
+/api/data /.netlify/functions/data 200
+
+/* /index.html 200

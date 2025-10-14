@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { UploadSensor } from "@/components/app/UploadSensor";
 import { KPICards, type UnifiedRecord } from "@/components/app/KPICards";
 import { MapView } from "@/components/app/MapView";
@@ -119,7 +120,15 @@ export default function Index() {
               <div className="text-xs text-muted-foreground">Instituto Tecnológico Metropolitano (ITM)</div>
             </div>
           </div>
-          <div className="text-sm text-muted-foreground">{new Date().toLocaleDateString()}</div>
+          <div className="flex items-center gap-6">
+            <div className="text-sm text-muted-foreground">{new Date().toLocaleDateString()}</div>
+            <Link 
+              to="/terminos" 
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              📚 Términos y Variables
+            </Link>
+          </div>
         </div>
       </header>
 
