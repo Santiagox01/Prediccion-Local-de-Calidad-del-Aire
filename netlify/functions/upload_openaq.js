@@ -1,11 +1,10 @@
-// Store for uploaded OpenAQ data
-let openaqData = [];
+import { getOpenaqData, setOpenaqData } from './_shared_store.js';
 
 export const handler = async (event) => {
   if (event.httpMethod === 'POST') {
     try {
       const { rows } = JSON.parse(event.body);
-      openaqData = rows || [];
+      setOpenaqData(rows || []);
       
       return {
         statusCode: 200,
@@ -13,7 +12,7 @@ export const handler = async (event) => {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*'
         },
-        body: JSON.stringify({ message: 'OpenAQ data uploaded successfully', count: openaqData.length })
+        body: JSON.stringify({ message: 'OpenAQ data uploaded successfully', count: getOpenaqData().length })
       };
     } catch (error) {
       return {
@@ -27,13 +26,12 @@ export const handler = async (event) => {
     }
   }
   
-  // GET request - return stored data
   return {
     statusCode: 200,
     headers: {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*'
     },
-    body: JSON.stringify(openaqData)
+    body: JSON.stringify(getOpenaqData())
   };
 };

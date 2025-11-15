@@ -1,11 +1,10 @@
-// Store for uploaded TEMPO data
-let tempoData = [];
+import { getTempoData, setTempoData } from './_shared_store.js';
 
 export const handler = async (event) => {
   if (event.httpMethod === 'POST') {
     try {
       const { rows } = JSON.parse(event.body);
-      tempoData = rows || [];
+      setTempoData(rows || []);
       
       return {
         statusCode: 200,
@@ -13,7 +12,7 @@ export const handler = async (event) => {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*'
         },
-        body: JSON.stringify({ message: 'TEMPO data uploaded successfully', count: tempoData.length })
+        body: JSON.stringify({ message: 'TEMPO data uploaded successfully', count: getTempoData().length })
       };
     } catch (error) {
       return {
@@ -27,13 +26,12 @@ export const handler = async (event) => {
     }
   }
   
-  // GET request - return stored data
   return {
     statusCode: 200,
     headers: {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*'
     },
-    body: JSON.stringify(tempoData)
+    body: JSON.stringify(getTempoData())
   };
 };

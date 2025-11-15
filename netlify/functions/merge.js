@@ -1,7 +1,4 @@
-// Merge data from all sources
-let sensorData = [];
-let openaqData = [];
-let tempoData = [];
+import { getSensorData, getOpenaqData, getTempoData } from './_shared_store.js';
 
 // Calculate AQI based on PM2.5 (EPA 2024 standard)
 function calculateAQI(pm25) {
@@ -36,36 +33,98 @@ export const handler = async (event) => {
   try {
     const { city, lat, lon, radiusKm = 50 } = JSON.parse(event.body);
     
-    // Generate mock unified data for demonstration
-    const currentTime = new Date();
-    const unifiedData = [];
+    const sensorData = getSensorData();
+    const openaqData = getOpenaqData();
+    const tempoData = getTempoData();
     
-    // Create sample merged data
-    for (let i = 0; i < 24; i++) {
-      const timestamp = new Date(currentTime.getTime() - (i * 3600000)).toISOString();
-      const pm25_sensor = 20 + Math.random() * 30;
-      const pm25_openaq = pm25_sensor + (Math.random() - 0.5) * 10;
-      const no2_tempo = 10 + Math.random() * 20;
-      const o3_tempo = 30 + Math.random() * 40;
-      const temp_c = 18 + Math.random() * 12;
-      const rh_pct = 40 + Math.random() * 40;
-      const aqi = calculateAQI(pm25_sensor);
-      const alert_flag = aqi >= 101;
-      
-      unifiedData.push({
-        timestamp,
-        lat: lat || 4.711,
-        lon: lon || -74.0721,
-        pm25_sensor,
-        pm25_openaq,
-        no2_tempo,
-        o3_tempo,
-        temp_c,
-        rh_pct,
-        aqi,
-        alert_flag
-      });
+    const unifiedData = [];
+    const mergedMap = new Map();
+    
+    if (sensorData.length > 0) {
+      for (const sensor of sensorData) {
+        const key = sensor.timestamp || new Date().toISOString();
+        if (!mergedMap.has(key)) {
+          mergedMap.set(key, {
+            timestamp: key,
+            lat: sensor.lat || lat || 4.711,
+            lon: sensor.lon || lon || -74.0721,
+            pm25_sensor: sensor.pm2_5,
+            pm1_0: sensor.pm1_0,
+            pm10_0: sensor.pm10_0,
+            temp_c: sensor.temp_c,
+            rh_pct: sensor.rh_pct,
+            sensor_id: sensor.sensor_id
+          });
+        }
+      }
     }
+    
+    if (openaqData.length > 0) {
+      for (const openaq of openaqData) {
+        const key = openaq.timestamp;
+        const existing = mergedMap.get(key) || {
+          timestamp: key,
+          lat: openaq.lat || lat || 4.711,
+          lon: openaq.lon || lon || -74.0721
+        };
+        existing.pm25_openaq = openaq.value;
+        existing.openaq_location = openaq.location;
+        mergedMap.set(key, existing);
+      }
+    }
+    
+    if (tempoData.length > 0) {
+      for (const tempo of tempoData) {
+        const key = tempo.timestamp;
+        const existing = mergedMap.get(key) || {
+          timestamp: key,
+          lat: tempo.lat || lat || 4.711,
+          lon: tempo.lon || lon || -74.0721
+        };
+        existing.no2_tempo = tempo.no2_tempo;
+        existing.o3_tempo = tempo.o3_tempo;
+        if (tempo.aod) existing.aod = tempo.aod;
+        mergedMap.set(key, existing);
+      }
+    }
+    
+    if (mergedMap.size === 0) {
+      const currentTime = new Date();
+      for (let i = 0; i < 24; i++) {
+        const timestamp = new Date(currentTime.getTime() - (i * 3600000)).toISOString();
+        const pm25_sensor = 20 + Math.random() * 30;
+        const pm25_openaq = pm25_sensor + (Math.random() - 0.5) * 10;
+        const no2_tempo = 10 + Math.random() * 20;
+        const o3_tempo = 30 + Math.random() * 40;
+        const temp_c = 18 + Math.random() * 12;
+        const rh_pct = 40 + Math.random() * 40;
+        const aqi = calculateAQI(pm25_sensor);
+        const alert_flag = aqi >= 101;
+        
+        mergedMap.set(timestamp, {
+          timestamp,
+          lat: lat || 4.711,
+          lon: lon || -74.0721,
+          pm25_sensor,
+          pm25_openaq,
+          no2_tempo,
+          o3_tempo,
+          temp_c,
+          rh_pct,
+          aqi,
+          alert_flag
+        });
+      }
+    }
+    
+    for (const [, record] of mergedMap) {
+      const pm25 = record.pm25_sensor || record.pm25_openaq || 0;
+      record.aqi = calculateAQI(pm25);
+      record.alert_flag = record.aqi >= 101;
+      unifiedData.push(record);
+    }
+    
+    unifiedData.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
     
     return {
       statusCode: 200,
