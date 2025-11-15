@@ -1,5 +1,4 @@
-// Store and retrieve TEMPO data
-let tempoData = [];
+import { getTempoData } from './_shared_store.js';
 
 export const handler = async (event) => {
   return {
@@ -8,6 +7,6 @@ export const handler = async (event) => {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*'
     },
-    body: JSON.stringify(tempoData)
+    body: JSON.stringify(getTempoData())
   };
 };

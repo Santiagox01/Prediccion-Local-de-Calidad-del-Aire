@@ -1,11 +1,10 @@
-// Store for uploaded sensor data
-let sensorData = [];
+import { getSensorData, setSensorData } from './_shared_store.js';
 
 export const handler = async (event) => {
   if (event.httpMethod === 'POST') {
     try {
       const { rows } = JSON.parse(event.body);
-      sensorData = rows || [];
+      setSensorData(rows || []);
       
       return {
         statusCode: 200,
@@ -13,7 +12,7 @@ export const handler = async (event) => {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*'
         },
-        body: JSON.stringify({ message: 'Sensor data uploaded successfully', count: sensorData.length })
+        body: JSON.stringify({ message: 'Sensor data uploaded successfully', count: getSensorData().length })
       };
     } catch (error) {
       return {
@@ -27,13 +26,12 @@ export const handler = async (event) => {
     }
   }
   
-  // GET request - return stored sensor data
   return {
     statusCode: 200,
     headers: {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*'
     },
-    body: JSON.stringify(sensorData)
+    body: JSON.stringify(getSensorData())
   };
 };
