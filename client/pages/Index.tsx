@@ -160,6 +160,7 @@ export default function Index() {
           <div className="mt-3 flex flex-wrap gap-2">
             <button onClick={mergeAll} className="px-4 py-2 rounded-md bg-primary text-primary-foreground">Fusionar fuentes</button>
             <button onClick={exportCSV} className="px-4 py-2 rounded-md bg-muted text-foreground">Descargar unificado (CSV)</button>
+            <a href="/api/export_sensor" className="px-4 py-2 rounded-md bg-muted text-foreground">Descargar Sensor (CSV)</a>
             <a href="/api/export_openaq" className="px-4 py-2 rounded-md bg-muted text-foreground">Descargar OpenAQ (CSV)</a>
             <a href="/api/export_tempo" className="px-4 py-2 rounded-md bg-muted text-foreground">Descargar TEMPO (CSV)</a>
             <a href="/api/data" target="_blank" className="px-4 py-2 rounded-md bg-muted text-foreground">/api/data</a>
